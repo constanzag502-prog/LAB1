@@ -1,0 +1,175 @@
+{
+    "parametros_ejecucion": {
+        "ruta_entrada": "data",
+        "ruta_salida": "results",
+        "fps_override": null,
+        "umbral_detencion_m_s": 0.2,
+        "duracion_min_detencion_s": 0.5,
+        "ancho_zona_medicion_m": 2.0,
+        "linea_flujo_x_m": 0.0
+    },
+    "validacion_por_experimento": {
+        "traj_UNI_CORR_500_01": {
+            "archivo": "traj_UNI_CORR_500_01.txt",
+            "fps_detectado": 25.0,
+            "fps_utilizado": 25.0,
+            "leidos": 25536,
+            "aceptados": 25536,
+            "descartados_total": 0,
+            "trayectorias_crudas": 148,
+            "trayectorias_descartadas_cortas_o_saltos": 1,
+            "trayectorias_validas": 147,
+            "detalle_descartes": {
+                "duplicados_espaciotemporales": 0,
+                "id_o_frame_invalido": 0,
+                "coordenada_nula_o_infinita": 0,
+                "fuera_del_corredor": 0
+            },
+            "sentido_caminata": "-x"
+        },
+        "traj_UNI_CORR_500_02": {
+            "archivo": "traj_UNI_CORR_500_02.txt",
+            "fps_detectado": 25.0,
+            "fps_utilizado": 25.0,
+            "leidos": 165585,
+            "aceptados": 165585,
+            "descartados_total": 0,
+            "trayectorias_crudas": 760,
+            "trayectorias_descartadas_cortas_o_saltos": 1,
+            "trayectorias_validas": 759,
+            "detalle_descartes": {
+                "duplicados_espaciotemporales": 0,
+                "id_o_frame_invalido": 0,
+                "coordenada_nula_o_infinita": 0,
+                "fuera_del_corredor": 0
+            },
+            "sentido_caminata": "-x"
+        },
+        "traj_UNI_CORR_500_03": {
+            "archivo": "traj_UNI_CORR_500_03.txt",
+            "fps_detectado": 25.0,
+            "fps_utilizado": 25.0,
+            "leidos": 254009,
+            "aceptados": 254009,
+            "descartados_total": 0,
+            "trayectorias_crudas": 916,
+            "trayectorias_descartadas_cortas_o_saltos": 0,
+            "trayectorias_validas": 916,
+            "detalle_descartes": {
+                "duplicados_espaciotemporales": 0,
+                "id_o_frame_invalido": 0,
+                "coordenada_nula_o_infinita": 0,
+                "fuera_del_corredor": 0
+            },
+            "sentido_caminata": "+x"
+        },
+        "traj_UNI_CORR_500_04": {
+            "archivo": "traj_UNI_CORR_500_04.txt",
+            "fps_detectado": 25.0,
+            "fps_utilizado": 25.0,
+            "leidos": 347836,
+            "aceptados": 347836,
+            "descartados_total": 0,
+            "trayectorias_crudas": 909,
+            "trayectorias_descartadas_cortas_o_saltos": 0,
+            "trayectorias_validas": 909,
+            "detalle_descartes": {
+                "duplicados_espaciotemporales": 0,
+                "id_o_frame_invalido": 0,
+                "coordenada_nula_o_infinita": 0,
+                "fuera_del_corredor": 0
+            },
+            "sentido_caminata": "-x"
+        },
+        "traj_UNI_CORR_500_05": {
+            "archivo": "traj_UNI_CORR_500_05.txt",
+            "fps_detectado": 25.0,
+            "fps_utilizado": 25.0,
+            "leidos": 363065,
+            "aceptados": 363065,
+            "descartados_total": 0,
+            "trayectorias_crudas": 905,
+            "trayectorias_descartadas_cortas_o_saltos": 0,
+            "trayectorias_validas": 905,
+            "detalle_descartes": {
+                "duplicados_espaciotemporales": 0,
+                "id_o_frame_invalido": 0,
+                "coordenada_nula_o_infinita": 0,
+                "fuera_del_corredor": 0
+            },
+            "sentido_caminata": "+x"
+        },
+        "traj_UNI_CORR_500_06": {
+            "archivo": "traj_UNI_CORR_500_06.txt",
+            "fps_detectado": 25.0,
+            "fps_utilizado": 25.0,
+            "leidos": 417956,
+            "aceptados": 417956,
+            "descartados_total": 0,
+            "trayectorias_crudas": 913,
+            "trayectorias_descartadas_cortas_o_saltos": 0,
+            "trayectorias_validas": 913,
+            "detalle_descartes": {
+                "duplicados_espaciotemporales": 0,
+                "id_o_frame_invalido": 0,
+                "coordenada_nula_o_infinita": 0,
+                "fuera_del_corredor": 0
+            },
+            "sentido_caminata": "-x"
+        },
+        "traj_UNI_CORR_500_07": {
+            "archivo": "traj_UNI_CORR_500_07.txt",
+            "fps_detectado": 25.0,
+            "fps_utilizado": 25.0,
+            "leidos": 549608,
+            "aceptados": 549608,
+            "descartados_total": 0,
+            "trayectorias_crudas": 914,
+            "trayectorias_descartadas_cortas_o_saltos": 40,
+            "trayectorias_validas": 874,
+            "detalle_descartes": {
+                "duplicados_espaciotemporales": 0,
+                "id_o_frame_invalido": 0,
+                "coordenada_nula_o_infinita": 0,
+                "fuera_del_corredor": 0
+            },
+            "sentido_caminata": "+x"
+        },
+        "traj_UNI_CORR_500_08": {
+            "archivo": "traj_UNI_CORR_500_08.txt",
+            "fps_detectado": 25.0,
+            "fps_utilizado": 25.0,
+            "leidos": 364934,
+            "aceptados": 364934,
+            "descartados_total": 0,
+            "trayectorias_crudas": 477,
+            "trayectorias_descartadas_cortas_o_saltos": 28,
+            "trayectorias_validas": 449,
+            "detalle_descartes": {
+                "duplicados_espaciotemporales": 0,
+                "id_o_frame_invalido": 0,
+                "coordenada_nula_o_infinita": 0,
+                "fuera_del_corredor": 0
+            },
+            "sentido_caminata": "-x"
+        },
+        "traj_UNI_CORR_500_09": {
+            "archivo": "traj_UNI_CORR_500_09.txt",
+            "fps_detectado": 25.0,
+            "fps_utilizado": 25.0,
+            "leidos": 268678,
+            "aceptados": 268678,
+            "descartados_total": 0,
+            "trayectorias_crudas": 310,
+            "trayectorias_descartadas_cortas_o_saltos": 19,
+            "trayectorias_validas": 291,
+            "detalle_descartes": {
+                "duplicados_espaciotemporales": 0,
+                "id_o_frame_invalido": 0,
+                "coordenada_nula_o_infinita": 0,
+                "fuera_del_corredor": 0
+            },
+            "sentido_caminata": "+x"
+        }
+    }
+}

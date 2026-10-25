@@ -1,0 +1,4 @@
+zona,sentido_exp,x_ini_m,x_fin_m,n_peatones,v_media_m_s,v_std_m_s,t_medio_s
+Zona Entrada,-x,1.5,4.5,909,0.7886,0.2593,4.3731
+Zona Central,-x,-1.5,1.5,909,0.744,0.23,4.5631
+Zona Salida,-x,-4.5,-1.5,909,0.7178,0.207,4.6723
