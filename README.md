@@ -31,6 +31,8 @@ sudo apt install python3 python3-pip python3-venv -y
 ### Clonar el Repositorio e Instalar Dependencias
 
 git clone [https://github.com/constanzag502-prog/LAB1.git](https://github.com/constanzag502-prog/LAB1.git)
+
+
 cd LAB1
 
 python3 -m venv .venv
