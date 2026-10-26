@@ -14,16 +14,35 @@ Pipeline modular automatizado en Python para el procesamiento y análisis de los
 - **Versión de Python:** Python 3.11 o superior (las versiones fijadas de `pandas` 3.x y `numpy` 2.x no instalan en 3.10). Verificar en el servidor con `python3 --version`.
 - **Dependencias:** `pandas`, `numpy`, `matplotlib` (especificadas en `requirements.txt`).
 
+## 2. Instalación y Configuración desde Cero (Primera vez en WSL)
 
-## 2. Instalación
-Para clonar el repositorio, crear el entorno virtual aislado e instalar las dependencias en Linux, ejecuta los siguientes comandos desde la terminal:
+Si es la primera vez que utilizas WSL en tu computador, sigue este procedimiento detallado para preparar el entorno de trabajo:
 
+### Instalar WSL en Windows (si aún no lo tienes)
+1. Abre el menú de inicio de Windows, busca **PowerShell**, haz clic derecho sobre él y selecciona **"Ejecutar como administrador"**.
+2. Ejecuta el comando de instalación:
+   ```powershell
+   wsl --install
+   
+sudo apt update && sudo apt upgrade -y
 
-    git clone <URL_DEL_REPOSITORIO>
-    cd LAB1
-    python3 -m venv .venv
-    source .venv/bin/activate
-    pip install -r requirements.txt
+sudo apt install git -y
+
+sudo apt install python3 python3-pip python3-venv -y
+
+### Clonar el Repositorio e Instalar Dependencias
+
+git clone [https://github.com/constanzag502-prog/LAB1.git](https://github.com/constanzag502-prog/LAB1.git)
+
+cd LAB1
+
+python3 -m venv .venv
+
+source .venv/bin/activate
+
+pip install -r requirements.txt
+
+python3 main.py --input ./data --output ./results
 
 
 ## 3. Formato y Ubicación de los Datos

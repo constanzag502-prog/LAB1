@@ -1,0 +1,4 @@
+Experimento,Cantidad peatones,Densidad media (p/m²),Velocidad media (m/s),Flujo (p/s),Distancia media (m),Tiempo medio (s),Eficiencia media,% Detenido
+Exp 1 (b1=1.0m),148,0.304,1.506,2.149,10.116,6.862,0.99,0.0
+Exp 2 (b1=2.0m),760,0.714,1.192,4.126,10.193,8.675,0.984,0.03
+Exp 3 (b1=3.0m),916,1.468,0.956,6.08,10.279,11.052,0.976,0.0

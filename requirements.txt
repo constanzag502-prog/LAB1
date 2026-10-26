@@ -1,4 +1,3 @@
-requirements
 contourpy==1.4.0
 cycler==0.12.1
 fonttools==4.67.0
