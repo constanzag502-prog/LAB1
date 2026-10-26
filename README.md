@@ -19,7 +19,7 @@ Pipeline modular automatizado en Python para el procesamiento y análisis de los
 Para clonar el repositorio, crear el entorno virtual aislado e instalar las dependencias en Linux, ejecuta los siguientes comandos desde la terminal:
 
 
-    git clone <(https://github.com/constanzag502-prog/LAB1.git)>
+    git clone https://github.com/constanzag502-prog/LAB1.git
     cd LAB1
     python3 -m venv .venv
     source .venv/bin/activate
