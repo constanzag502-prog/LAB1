@@ -25,22 +25,16 @@ Si es la primera vez que utilizas WSL en tu computador, sigue este procedimiento
    wsl --install
    
 sudo apt update && sudo apt upgrade -y
-
 sudo apt install git -y
-
 sudo apt install python3 python3-pip python3-venv -y
 
 ### Clonar el Repositorio e Instalar Dependencias
 
 git clone [https://github.com/constanzag502-prog/LAB1.git](https://github.com/constanzag502-prog/LAB1.git)
-
-
 cd LAB1
-
 python3 -m venv .venv
-
+source .venv/bin/activate
 pip install -r requirements.txt
-
 python3 main.py --input ./data --output ./results
 
 
