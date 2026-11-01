@@ -6,8 +6,10 @@ from models.trayectoria import Trayectoria
 from models.experimento import Experimento
 from validacion import filtrar_observaciones
 
+#  FPS de respaldo si el archivo no trae "# framerate" 
 FPS_POR_DEFECTO = 25.0
 
+#  Lectura del FPS desde la cabecera del archivo .txt  
 def leer_fps_cabecera(ruta_archivo: str | Path) -> float | None:
     """Extrae el valor de '# framerate:' del encabezado del .txt, o None si no viene."""
     try:
@@ -26,6 +28,7 @@ def leer_fps_cabecera(ruta_archivo: str | Path) -> float | None:
         pass
     return None
 
+#  Carga de un experimento: lee el .txt, valida observaciones y arma las trayectorias 
 def cargar_experimento(
     ruta_archivo: str | Path,
     nombre_exp: str | None = None,
@@ -36,7 +39,7 @@ def cargar_experimento(
     if nombre_exp is None:
         nombre_exp = ruta.stem
 
-
+    #  Definición del FPS: argumento --fps, cabecera o valor por defecto (con aviso) 
     fps_cabecera = leer_fps_cabecera(ruta)
     if fps_override is not None:
         fps_final = fps_override
@@ -47,7 +50,7 @@ def cargar_experimento(
         print(f"  [AVISO] {ruta.name} no trae '# framerate'. Se usa {FPS_POR_DEFECTO} fps. "
               f"Use --fps para indicarlo explícitamente.")
 
-
+    #  Lectura del archivo con pandas y eliminación de duplicados (id, frame) 
     columnas = ["id", "frame", "x", "y", "z"]
     df = pd.read_csv(
         ruta,
@@ -64,6 +67,7 @@ def cargar_experimento(
 
     experimento = Experimento(nombre=nombre_exp, fps=fps_final)
 
+    #  Reporte de validación del experimento 
     reporte = {
         "archivo": ruta.name,
         "fps_cabecera": fps_cabecera,
@@ -78,6 +82,7 @@ def cargar_experimento(
         },
     }
 
+    #  Agrupación por peatón, creación de observaciones y filtrado 
     for pid, grupo in df.groupby("id"):
         obs_crudas = [
             Observacion(

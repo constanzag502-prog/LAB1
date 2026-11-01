@@ -5,6 +5,7 @@ from models.experimento import Experimento
 from pipeline.contexto import ContextoPipeline
 from pipeline.etapa import EtapaPipeline
 
+#  ETAPA 3, Análisis individual: indicadores por peatón 
 class AnalisisIndividual(EtapaPipeline[list[Experimento], list[Experimento]]):
     """Calcula métricas individuales por peatón y estadísticas de detención."""
 
@@ -12,12 +13,14 @@ class AnalisisIndividual(EtapaPipeline[list[Experimento], list[Experimento]]):
     def nombre(self) -> str:
         return "Análisis Individual"
 
+    # Calcula para cada peatón posición, tiempo, distancias, velocidades, eficiencia y detenciones 
     def ejecutar(self, experimentos: list[Experimento], contexto: ContextoPipeline) -> list[Experimento]:
         v_umbral = contexto.umbral_detencion
         dur_min = contexto.duracion_min_detencion
 
         for exp in experimentos:
             fps = exp.fps
+             #  Paso de ~1 s para la velocidad máxima sin ruido de oscilación 
             paso_suave = max(1, int(round(fps)))  # paso de ~1 s para una v_max sin el ruido del balanceo
             filas = []
 
@@ -25,6 +28,7 @@ class AnalisisIndividual(EtapaPipeline[list[Experimento], list[Experimento]]):
                 n_det, t_det, pct_det = t.estadisticas_detencion(
                     fps=fps, v_umbral=v_umbral, duracion_min=dur_min
                 )
+                #  Fila de resultados del peatón (va a individuales.csv) 
                 filas.append({
                     "id": t.id_peaton,
                     "x0_m": round(t.observaciones[0].x, 4),

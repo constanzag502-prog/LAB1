@@ -4,11 +4,13 @@ from typing import List, Tuple
 from models.observacion import Observacion
 from models.metricas import distancia
 
+#  Trayectoria de un peatón: sus observaciones ordenadas y todas sus métricas 
 @dataclass
 class Trayectoria:
     id_peaton: int
     observaciones: List[Observacion] = field(default_factory=list)
 
+    #  Ordena las observaciones por frame y elimina frames repetidos 
     def __post_init__(self):
         # Ordenar cronológicamente y garantizar unicidad de frames
         ordenadas = sorted(self.observaciones, key=lambda o: o.frame)
@@ -20,6 +22,8 @@ class Trayectoria:
                 ultimo_frame = o.frame
         self.observaciones = limpias
 
+
+    #  Tramos consecutivos (frame inicial, frame final, Δt, distancia) usando map y filter 
     def tramos(self, fps: float, paso: int = 1) -> List[Tuple[int, int, float, float]]:
         """
         Retorna lista de tuplas (frame_ini, frame_fin, dt, dist) usando map y filter.
@@ -38,15 +42,18 @@ class Trayectoria:
         )
         return list(filter(lambda t: t[2] > 0, mapeados))
 
+    #  Velocidad de cada tramo, v = d / Δt (método único reutilizado en todo el código) 
     def velocidades(self, fps: float, paso: int = 1) -> List[float]:
         """Método único para obtener velocidades por tramo usando map()."""
         return list(map(lambda t: t[3] / t[2], self.tramos(fps, paso=paso)))
 
+    #  Tiempo total observado, T = (frame final - frame inicial) / FPS 
     def calcular_tiempo_total(self, fps: float) -> float:
         if len(self.observaciones) < 2 or fps <= 0:
             return 0.0
         return (self.observaciones[-1].frame - self.observaciones[0].frame) / fps
 
+    #  Distancia total recorrida Dr, suma de tramos con reduce 
     def calcular_distancia_total(self) -> float:
         if len(self.observaciones) < 2:
             return 0.0
@@ -54,29 +61,35 @@ class Trayectoria:
         distancias = map(lambda p: distancia((p[0].x, p[0].y), (p[1].x, p[1].y)), pares)
         return reduce(lambda acc, d: acc + d, distancias, 0.0)
 
+    #  Desplazamiento D, línea recta entre posición inicial y final 
     def calcular_desplazamiento(self) -> float:
         if len(self.observaciones) < 2:
             return 0.0
         inicio, fin = self.observaciones[0], self.observaciones[-1]
         return distancia((inicio.x, inicio.y), (fin.x, fin.y))
 
+    #  Velocidad media, Dr / T 
     def calcular_velocidad_media(self, fps: float) -> float:
         t = self.calcular_tiempo_total(fps)
         return self.calcular_distancia_total() / t if t > 0 else 0.0
 
+    #  Velocidad máxima registrada (paso 1 frame o paso ~1 s para reducir ruido) 
     def calcular_velocidad_maxima(self, fps: float, paso: int = 1) -> float:
         vels = self.velocidades(fps, paso=paso)
         return max(vels) if vels else 0.0
 
+    #  Eficiencia de la trayectoria, E = D / Dr 
     def calcular_eficiencia(self) -> float:
         d_total = self.calcular_distancia_total()
         return self.calcular_desplazamiento() / d_total if d_total > 0 else 0.0
 
+    #  Detecta si algún tramo supera la velocidad físicamente posible 
     def tiene_saltos_imposibles(self, fps: float, v_max_permitida: float = 4.0) -> bool:
         """Detecta si algún tramo supera el umbral físico razonable (ej. 4 m/s)."""
         vels = self.velocidades(fps, paso=1)
         return any(v > v_max_permitida for v in vels)
 
+    #  Limpieza de errores de seguimiento: quita solo los puntos con saltos imposibles 
     def limpiar_saltos(self, fps: float, v_max: float = 4.0, max_consecutivos: int = 5) -> Tuple["Trayectoria", int]:
         if len(self.observaciones) < 2 or fps <= 0:
             return self, 0
@@ -96,14 +109,17 @@ class Trayectoria:
                 seguidos += 1
         return Trayectoria(id_peaton=self.id_peaton, observaciones=conservadas), eliminadas
 
+    #  Detecta trayectorias demasiado cortas (pocos frames o casi sin desplazamiento) 
     def es_corta(self, min_frames: int = 10, min_desp: float = 0.5) -> bool:
         """True si la trayectoria tiene muy pocas observaciones o casi no se desplaza."""
         return len(self.observaciones) < min_frames or self.calcular_desplazamiento() < min_desp
 
+    #  Valida que la trayectoria no sea corta ni tenga saltos 
     def es_trayectoria_valida(self, fps: float, min_frames: int = 10, min_desp: float = 0.5, v_limite: float = 4.0) -> bool:
         """Valida que la trayectoria no sea demasiado corta ni tenga saltos irreales."""
         return not self.es_corta(min_frames, min_desp) and not self.tiene_saltos_imposibles(fps, v_limite)
 
+    #  Detección de detenciones: episodios con v < umbral durante al menos la duración mínima 
     def detectar_detenciones(self, fps: float, v_umbral: float = 0.2, duracion_min: float = 0.5) -> List[Tuple[int, int, float]]:
         """
         Retorna episodios de detención [(frame_inicio, frame_fin, duracion_s)]
@@ -131,12 +147,13 @@ class Trayectoria:
                         episodios.append((f_ini, f_fin, t_acum))
                     en_detencion = False
                     t_acum = 0.0
-
+        #  Cierra la detención si la trayectoria termina detenida 
         if en_detencion and t_acum >= duracion_min:
             episodios.append((f_ini, f_fin, t_acum))
 
         return episodios
 
+    #  Resumen de detenciones: cantidad, tiempo detenido y % del tiempo total 
     def estadisticas_detencion(self, fps: float, v_umbral: float = 0.2, duracion_min: float = 0.5) -> Tuple[int, float, float]:
         """Retorna (cantidad_detenciones, tiempo_detenido_s, pct_detenido)."""
         t_total = self.calcular_tiempo_total(fps)

@@ -4,29 +4,30 @@ from dataclasses import dataclass, field, asdict
 from pathlib import Path
 from typing import Any
 
+# Configuración de la ejecución: todos los parámetros del análisis en un solo lugar 
 @dataclass
 class ContextoPipeline:
+    #  Rutas de entrada y salida, y FPS (None = se lee de la cabecera de cada archivo) 
     ruta_entrada: Path
     ruta_salida: Path
     fps: float | None = None  # None = se lee de "# framerate" en cada archivo
 
-    #Detenciones
+    ##Parámetros de detención: umbral de velocidad y duración mínima 
     umbral_detencion: float = 0.2      # m/s velocidad bajo la cual se considera detenido
     duracion_min_detencion: float = 0.5  # s duración mínima de un episodio
 
-    #Validación de trayectorias
+    ## Parámetros de validación: salto imposible, largo y desplazamiento mínimos 
     v_max_salto: float = 4.0           # [m/s] tramo más rápido que esto = error de seguimiento
     min_frames: int = 10               # trayectorias con menos observaciones se descartan
     min_desplazamiento: float = 0.5    # [m] desplazamiento neto mínimo
 
-    #Geometría de medición
+    #Geometría de medición: ancho del corredor, área de densidad, línea de flujo y zonas 
     ancho_corredor: float = 5.0        # [m] ancho b del pasillo (UNI_CORR_500)
     largo_area: float = 2.0            # [m] largo en x del área de medición de densidad
     x_linea_flujo: float = 0.0         # [m] posición de la línea transversal de flujo
     limites_zonas: tuple[float, ...] = (-4.5, -1.5, 1.5, 4.5)  # [m] bordes de las 3 zonas en x
 
-    #Series temporales
-    paso_muestreo_frames: int = 5      # cada cuántos frames se evalúa rho(t) y v(t)
+    #Series temporales: muestreo, ventana estacionaria y ventana de flujo 
     fraccion_estacionario: tuple[float, float] = (0.15, 0.85)  # ventana estacionaria
     ventana_flujo_s: float = 10.0      # [s] ancho de las ventanas de flujo
 
@@ -43,6 +44,7 @@ class ContextoPipeline:
         default_factory=lambda: {"traj_UNI_CORR_500_08": 90.0}
     )
 
+    #Convierte la configuración a diccionario para guardarla en el JSON de resultados
     def como_diccionario(self) -> dict[str, Any]:
         """Versión serializable a JSON de toda la configuración."""
         datos = asdict(self)

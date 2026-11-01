@@ -4,6 +4,7 @@ from models.trayectoria import Trayectoria
 from pipeline.contexto import ContextoPipeline
 from pipeline.etapa import EtapaPipeline
 
+#  ETAPA 2, Preparación: limpieza de saltos y descarte de trayectorias inválidas 
 class PreparacionTrayectorias(EtapaPipeline[list[Experimento], list[Experimento]]):
     """Limpia saltos imposibles punto a punto y descarta trayectorias inutilizables."""
 
@@ -11,6 +12,7 @@ class PreparacionTrayectorias(EtapaPipeline[list[Experimento], list[Experimento]
     def nombre(self) -> str:
         return "Preparación de Trayectorias"
 
+    #  Limpia, filtra y registra en el reporte de validación cuántas se corrigieron o descartaron 
     def ejecutar(self, experimentos: list[Experimento], contexto: ContextoPipeline) -> list[Experimento]:
         for exp in experimentos:
             antes = len(exp.trayectorias)
@@ -36,6 +38,7 @@ class PreparacionTrayectorias(EtapaPipeline[list[Experimento], list[Experimento]
             ))
             n_saltos = len(no_cortas) - len(validas)
 
+            # 4. Registro de conteos en el reporte de validación
             exp.trayectorias = validas
             exp.reporte_validacion.update({
                 "observaciones_quitadas_por_salto": obs_quitadas,

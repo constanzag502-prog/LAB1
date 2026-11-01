@@ -6,13 +6,17 @@ from models.experimento import Experimento
 from pipeline.contexto import ContextoPipeline
 from pipeline.etapa import EtapaPipeline
 
+#  ETAPA 1, Carga: lee todos los .txt de la carpeta de entrada 
 class CargaExperimentos(EtapaPipeline[None, list[Experimento]]):
     """Carga todos los archivos .txt desde la ruta de entrada."""
 
+    #  Nombre legible de la etapa (se muestra en terminal) 
     @property
     def nombre(self) -> str:
         return "Carga de Experimentos"
 
+
+    #  Busca los archivos .txt y carga cada experimento 
     def ejecutar(self, datos: None, contexto: ContextoPipeline) -> list[Experimento]:
         ruta_in = Path(contexto.ruta_entrada)
         if ruta_in.is_file():

@@ -3,6 +3,7 @@ from typing import Dict, List
 from models.observacion import Observacion
 from models.metricas import distancia
 
+#  Área de medición rectangular para calcular densidad y velocidad local 
 @dataclass
 class AreaMedicion:
     nombre: str
@@ -11,27 +12,27 @@ class AreaMedicion:
     y_min: float
     y_max: float
 
-
+    #  Superficie del área en m2
     def area(self) -> float:
         return max(0.0, (self.x_max - self.x_min) * (self.y_max - self.y_min))
 
-
+    #  Verifica si un punto (x, y) está dentro del área 
     def contiene(self, x: float, y: float) -> bool:
         return (self.x_min <= x <= self.x_max) and (self.y_min <= y <= self.y_max)
 
-
+    # Peatones presentes dentro del área en un frame 
     def peatones_en_frame(self, frame: int, vista_frames: Dict[int, List[Observacion]]) -> List[Observacion]:
         obs_frame = vista_frames.get(frame, [])
         return [o for o in obs_frame if self.contiene(o.x, o.y)]
 
-
+    # Densidad en un instante, rho = N / A 
     def calcular_densidad(self, frame: int, vista_frames: Dict[int, List[Observacion]]) -> float:
         a = self.area()
         if a <= 0:
             return 0.0
         return len(self.peatones_en_frame(frame, vista_frames)) / a
 
-
+    #  Velocidad media de los peatones dentro del área en un instante 
     def calcular_velocidad_area(self, frame: int, vista_frames: Dict[int, List[Observacion]], fps: float, paso: int = 5) -> float:
         """
         Calcula la velocidad media instantánea de los peatones que están dentro del área

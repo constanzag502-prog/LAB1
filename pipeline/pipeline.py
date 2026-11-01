@@ -5,12 +5,16 @@ from typing import Any
 from .contexto import ContextoPipeline
 from .etapa import EtapaPipeline
 
+#Orquestador: ejecuta las etapas en orden, pasando el resultado de una a la siguiente
 class Pipeline:
     """Ejecuta una colección de etapas sobre un contexto compartido."""
 
+
+    # Guarda la lista de etapas a ejecutar 
     def __init__(self, etapas: list[EtapaPipeline[Any, Any]]) -> None:
         self._etapas = list(etapas)
 
+    # Recorre las etapas, muestra el avance y se detiene si alguna no está implementada 
     def ejecutar(self, contexto: ContextoPipeline) -> bool:
         """Pasa cada resultado a la etapa siguiente y se detiene ante una etapa pendiente."""
         resultado: Any = None

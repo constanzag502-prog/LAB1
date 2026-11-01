@@ -3,6 +3,7 @@ from typing import List, Dict, Any
 from models.observacion import Observacion
 from models.trayectoria import Trayectoria
 
+#  Experimento: trayectorias de una corrida, FPS, validación y resultados calculados 
 @dataclass
 class Experimento:
     """Una corrida del experimento: sus trayectorias, metadatos y resultados calculados."""
@@ -19,7 +20,7 @@ class Experimento:
     flujo_ventanas: List[Dict[str, Any]] = field(default_factory=list)
     resumen: Dict[str, Any] = field(default_factory=dict)
 
-
+    #  Índice por frame {frame: [observaciones]} para calcular densidad y velocidad por instante 
     def vista_por_frame(self) -> Dict[int, List[Observacion]]:
         """Índice temporal {frame: [Observacion, ...]} construido desde las trayectorias válidas."""
         vista: Dict[int, List[Observacion]] = {}
@@ -28,7 +29,7 @@ class Experimento:
                 vista.setdefault(obs.frame, []).append(obs)
         return vista
 
-
+    #  Sentido de caminata (+x o -x) según el desplazamiento neto promedio
     def sentido_caminata(self) -> str:
         """
         Determina si los peatones avanzan hacia '+x' (izq a der) o hacia '-x'

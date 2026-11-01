@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Tuple, Dict
 
+#  Línea transversal del corredor para medir el flujo peatonal 
 @dataclass
 class LineaMedicion:
     nombre: str
@@ -8,7 +9,7 @@ class LineaMedicion:
     y_min: float
     y_max: float
 
-
+    #  Detecta cuándo cruza cada peatón la línea (interpolación lineal, solo el primer cruce) 
     def detectar_cruces(self, experimento, fps: float) -> List[Dict[str, float]]:
         """
         Retorna lista ordenada por tiempo de diccionarios:
@@ -47,7 +48,7 @@ class LineaMedicion:
         cruces.sort(key=lambda c: c["t_cruce_s"])
         return cruces
 
-
+    #  Devuelve solo los tiempos de cruce en segundos (usado en el notebook) 
     def obtener_tiempos_cruce(self, experimento, fps: float) -> List[float]:
         """Solo los instantes de cruce [s], ordenados (atajo usado en el notebook)."""
         return [c["t_cruce_s"] for c in self.detectar_cruces(experimento, fps)]

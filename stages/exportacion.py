@@ -13,6 +13,7 @@ from models.resultado_analisis import ResultadoAnalisis
 from pipeline.contexto import ContextoPipeline
 from pipeline.etapa import EtapaPipeline
 
+# ===== ETAPA 6, Exportación: CSV, JSON y figuras en la carpeta de salida =====
 class ExportacionResultados(EtapaPipeline[ResultadoAnalisis, ResultadoAnalisis]):
     """Exporta todos los resultados tabulares, metadatos y gráficos en --output."""
 
@@ -20,6 +21,7 @@ class ExportacionResultados(EtapaPipeline[ResultadoAnalisis, ResultadoAnalisis])
     def nombre(self) -> str:
         return "Exportación de Resultados"
 
+    # --- Guarda todas las tablas, la configuración usada y genera las 7 figuras ---
     def ejecutar(self, resultado: ResultadoAnalisis, contexto: ContextoPipeline) -> ResultadoAnalisis:
         out_dir = Path(contexto.ruta_salida)
         fig_dir = out_dir / "figuras"
@@ -73,6 +75,7 @@ class ExportacionResultados(EtapaPipeline[ResultadoAnalisis, ResultadoAnalisis])
         print(f"  [OK] Tablas CSV, JSON y figuras exportadas en '{out_dir}'")
         return resultado
 
+    # --- Figura: trayectorias 2D con área de medición, zonas y línea de flujo ---
     def _graficar_trayectorias(self, exp, contexto: ContextoPipeline, ruta_png: Path):
         plt.figure(figsize=(10, 4))
         for t in exp.trayectorias[::2]:  # Muestreo visual limpio
@@ -105,6 +108,7 @@ class ExportacionResultados(EtapaPipeline[ResultadoAnalisis, ResultadoAnalisis])
         plt.savefig(ruta_png, dpi=200)
         plt.close()
 
+    # --- Figura: histograma de velocidades instantáneas con el umbral de detención ---
     def _graficar_histograma_velocidades(self, resultado: ResultadoAnalisis, umbral: float, ruta_png: Path):
         plt.figure(figsize=(9, 5))
         # Comparamos un experimento fluido (01) vs uno congestionado (07 o el de mayor densidad)
@@ -130,7 +134,7 @@ class ExportacionResultados(EtapaPipeline[ResultadoAnalisis, ResultadoAnalisis])
         plt.savefig(ruta_png, dpi=250)
         plt.close()
 
-
+    # --- Figura: boxplots de velocidad media y eficiencia por peatón en los 9 experimentos ---
     def _graficar_boxplots_individuales(self, resultado: ResultadoAnalisis, ruta_png: Path):
         fig, axes = plt.subplots(1, 2, figsize=(14, 5))
         nombres = [e.nombre.replace("traj_UNI_CORR_500_", "Exp ") for e in resultado.experimentos]
@@ -158,7 +162,7 @@ class ExportacionResultados(EtapaPipeline[ResultadoAnalisis, ResultadoAnalisis])
         plt.savefig(ruta_png, dpi=250)
         plt.close()
 
-
+    # --- Figura: velocidad media por zona (Entrada, Central, Salida) con dispersión ---
     def _graficar_velocidad_por_zona(self, resultado: ResultadoAnalisis, ruta_png: Path):
         plt.figure(figsize=(12, 5))
         nombres = [e.nombre.replace("traj_UNI_CORR_500_", "Exp ") for e in resultado.experimentos]
@@ -190,7 +194,7 @@ class ExportacionResultados(EtapaPipeline[ResultadoAnalisis, ResultadoAnalisis])
         plt.savefig(ruta_png, dpi=250)
         plt.close()
 
-
+    # --- Figura: evolución de la densidad ρ(t) con ventana estacionaria y cambio de régimen ---
     def _graficar_series_densidad(self, resultado: ResultadoAnalisis, contexto: ContextoPipeline, ruta_png: Path):
         fig, axes = plt.subplots(3, 3, figsize=(15, 10), sharex=False, sharey=True)
         axes_flat = axes.flatten()
@@ -226,7 +230,7 @@ class ExportacionResultados(EtapaPipeline[ResultadoAnalisis, ResultadoAnalisis])
         plt.savefig(ruta_png, dpi=250)
         plt.close()
 
-
+# --- Figura: diagrama fundamental, velocidad vs densidad en el área ---
     def _graficar_diagrama_fundamental(self, resultado: ResultadoAnalisis, ruta_png: Path):
         """Punto 7: Diagrama fundamental usando pares (rho, v) por frame en el área para los 9 experimentos."""
         plt.figure(figsize=(10, 6))
@@ -261,7 +265,7 @@ class ExportacionResultados(EtapaPipeline[ResultadoAnalisis, ResultadoAnalisis])
         plt.savefig(ruta_png, dpi=250)
         plt.close()
 
-
+    # --- Figura: diagrama N-t, personas acumuladas que cruzan la línea vs tiempo ---
     def _graficar_diagramas_nt(self, resultado: ResultadoAnalisis, contexto: ContextoPipeline, ruta_png: Path):
         plt.figure(figsize=(10, 6))
         cmap = plt.get_cmap("tab10")

@@ -10,10 +10,12 @@ from pipeline.etapa import EtapaPipeline
 # de este porcentaje de la del primer tercio, la ventana no es realmente estacionaria.
 TOLERANCIA_ESTACIONARIO_PCT = 20.0
 
+#  Promedio seguro: devuelve NaN si la lista está vacía 
 def _media(valores: list[float]) -> float:
     """Promedio que devuelve NaN en vez de fallar cuando la lista está vacía."""
     return float(np.mean(valores)) if valores else float("nan")
 
+#  Flujo global: personas que cruzaron dividido por el tiempo entre el primer y el último cruce 
 def _flujo(cruces: list[dict]) -> float:
     """J = N / Δt entre el primer y el último cruce."""
     if len(cruces) < 2:
@@ -21,6 +23,7 @@ def _flujo(cruces: list[dict]) -> float:
     dt = cruces[-1]["t_cruce_s"] - cruces[0]["t_cruce_s"]
     return len(cruces) / dt if dt > 0 else 0.0
 
+#  ETAPA 5, Comparación: resumen de cada experimento y tabla comparativa 
 class ComparacionExperimentos(EtapaPipeline[list[Experimento], ResultadoAnalisis]):
     """Consolida métricas globales de cada experimento y construye ResultadoAnalisis."""
 
@@ -28,6 +31,7 @@ class ComparacionExperimentos(EtapaPipeline[list[Experimento], ResultadoAnalisis
     def nombre(self) -> str:
         return "Comparación de Experimentos"
 
+    # --- Resume cada experimento y ordena la tabla de menor a mayor densidad ---
     def ejecutar(self, experimentos: list[Experimento], contexto: ContextoPipeline) -> ResultadoAnalisis:
         resumenes = [self._resumir(exp, contexto) for exp in experimentos]
         resumenes.sort(key=lambda r: r["densidad_media_1_m2"])  # de menor a mayor densidad (Fase 11)
@@ -37,6 +41,7 @@ class ComparacionExperimentos(EtapaPipeline[list[Experimento], ResultadoAnalisis
             tabla_resumen=resumenes,
         )
 
+#  Resumen de un experimento: densidad, velocidades, flujo, ρ·v·b, eficiencia y estacionariedad 
     def _resumir(self, exp: Experimento, contexto: ContextoPipeline) -> dict:
         ind = exp.metricas_individuales
         est = [d for d in exp.serie_densidad if d["estado_estacionario"]] or exp.serie_densidad
@@ -44,6 +49,8 @@ class ComparacionExperimentos(EtapaPipeline[list[Experimento], ResultadoAnalisis
         rho_est = _media([d["rho_1_m2"] for d in est])
         v_area_est = _media([d["v_media_area_m_s"] for d in est if d["v_media_area_m_s"] > 0])
         j_global = _flujo(exp.cruces_flujo)
+
+        # --- Validación hidrodinámica: flujo teórico J = ρ · v · b ---
         j_hidro = rho_est * v_area_est * contexto.ancho_corredor  # J ≈ ρ·v·b (RA5)
 
         # Criterio objetivo de estacionariedad: primer tercio vs último tercio de la ventana
@@ -75,7 +82,7 @@ class ComparacionExperimentos(EtapaPipeline[list[Experimento], ResultadoAnalisis
         exp.resumen = resumen
         return resumen
 
-
+    #  Métricas antes y después del cambio de régimen (exp 08) 
     def _resumir_tramos(self, exp: Experimento, contexto: ContextoPipeline) -> dict:
         """Para experimentos con cambio de geometría documentado, métricas antes y después."""
         t_cambio = contexto.cambios_geometria_s.get(exp.nombre)

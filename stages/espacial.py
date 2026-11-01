@@ -8,6 +8,7 @@ from models.metricas import distancia
 from pipeline.contexto import ContextoPipeline
 from pipeline.etapa import EtapaPipeline
 
+#  ETAPA 4, Análisis espacial: zonas, densidad en el tiempo y flujo 
 class AnalisisEspacial(EtapaPipeline[list[Experimento], list[Experimento]]):
     """Evalúa métricas por zonas longitudinales, densidad temporal y flujo de cruce."""
 
@@ -15,6 +16,7 @@ class AnalisisEspacial(EtapaPipeline[list[Experimento], list[Experimento]]):
     def nombre(self) -> str:
         return "Análisis Espacial"
 
+    #  Crea el área y la línea de medición y aplica los 3 análisis a cada experimento 
     def ejecutar(self, experimentos: list[Experimento], contexto: ContextoPipeline) -> list[Experimento]:
         mitad = contexto.largo_area / 2.0
         area_central = AreaMedicion(
@@ -39,6 +41,7 @@ class AnalisisEspacial(EtapaPipeline[list[Experimento], list[Experimento]]):
 
         return experimentos
 
+    #  Define las zonas Entrada, Central y Salida según el sentido de caminata 
     def _definir_zonas(self, sentido: str, limites: tuple[float, ...]) -> list[tuple[str, float, float]]:
         """Zonas consecutivas en x, nombradas en el orden en que el peatón las recorre."""
         tramos = list(zip(limites, limites[1:]))   # de menor a mayor x
@@ -49,6 +52,7 @@ class AnalisisEspacial(EtapaPipeline[list[Experimento], list[Experimento]]):
             nombres = [f"Zona {i + 1}" for i in range(len(tramos))]
         return [(n, a, b) for n, (a, b) in zip(nombres, tramos)]
 
+    #  Por zona: cantidad de peatones, velocidad media y tiempo medio de cruce 
     def _analizar_zonas(self, exp: Experimento, contexto: ContextoPipeline) -> list[dict]:
         """Por zona, cantidad de peatones, velocidad media y tiempo medio de cruce."""
         sentido = exp.sentido_caminata()
@@ -80,6 +84,7 @@ class AnalisisEspacial(EtapaPipeline[list[Experimento], list[Experimento]]):
             })
         return resultados
 
+    #  Serie de densidad p(t) y velocidad v(t) en el área, con estado estacionario y tramo 
     def _serie_densidad(self, exp: Experimento, area: AreaMedicion, contexto: ContextoPipeline) -> list[dict]:
         """Serie rho(t) y v(t) dentro del área, marcando estado estacionario y tramo."""
         vista = exp.vista_por_frame()
@@ -109,6 +114,7 @@ class AnalisisEspacial(EtapaPipeline[list[Experimento], list[Experimento]]):
             })
         return serie
 
+    #  Flujo J = N / Δt en ventanas de tiempo fijas (10 s) 
     def _flujo_por_ventanas(self, cruces: list[dict], ancho_v: float) -> list[dict]:
         """Flujo J = N / Δt en ventanas consecutivas de ancho fijo."""
         if not cruces:

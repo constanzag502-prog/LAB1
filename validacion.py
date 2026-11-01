@@ -2,18 +2,23 @@ import math
 from typing import List, Dict, Any, Tuple
 from models.observacion import Observacion
 
+
+#  Predicado: ID positivo y frame no negativo 
 def id_y_frame_validos(obs: Observacion) -> bool:
     """Predicado: ID positivo y frame no negativo."""
     return obs.id_peaton > 0 and obs.frame >= 0
 
+#  Predicado: coordenadas numéricas válidas (sin NaN ni infinitos) 
 def coordenadas_finitas(obs: Observacion) -> bool:
     """Predicado: Coordenadas reales finitas (sin NaN ni infinitos)."""
     return math.isfinite(obs.x) and math.isfinite(obs.y) and math.isfinite(obs.z)
 
+#  Predicado: posición dentro de los límites físicos del corredor 
 def dentro_del_corredor(obs: Observacion) -> bool:
     """Predicado: Límites físicos reales del pasillo experimental."""
     return (-6.0 <= obs.x <= 5.5) and (-0.5 <= obs.y <= 5.5)
 
+#  Aplica las 3 reglas con filter() y cuenta los descartes por regla 
 def filtrar_observaciones(observaciones: List[Observacion]) -> Tuple[List[Observacion], Dict[str, Any]]:
     """
     Filtra una lista de observaciones aplicando programación funcional (filter)

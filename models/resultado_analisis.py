@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any
 from .experimento import Experimento
 
+#  Contenedor final: los experimentos analizados y su tabla comparativa 
 @dataclass
 class ResultadoAnalisis:
     """Conserva los experimentos y los resultados de su comparación."""

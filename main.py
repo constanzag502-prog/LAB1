@@ -1,5 +1,6 @@
 """Punto de entrada del pipeline de análisis de trayectorias peatonales."""
 
+# ===== Backend sin pantalla: permite generar gráficos en el servidor Linux =====
 import matplotlib
 matplotlib.use("Agg")  # el servidor no tiene pantalla, las figuras se guardan como PNG
 
@@ -17,6 +18,7 @@ from stages import (
     ExportacionResultados,
 )
 
+# ===== Lectura de argumentos de terminal (--input, --output, --fps, umbrales) =====
 def crear_parser() -> argparse.ArgumentParser:
     """Crea el analizador de argumentos de línea de comandos."""
     parser = argparse.ArgumentParser(
@@ -53,6 +55,7 @@ def crear_parser() -> argparse.ArgumentParser:
     )
     return parser
 
+# ===== Función principal: arma la configuración, define las 6 etapas y ejecuta el pipeline =====
 def main(argumentos: Sequence[str] | None = None) -> int:
     """Configura y ejecuta las 6 etapas del pipeline."""
     configuracion = crear_parser().parse_args(argumentos)
@@ -89,5 +92,6 @@ def main(argumentos: Sequence[str] | None = None) -> int:
 
     return 0 if pipeline.ejecutar(contexto) else 1
 
+# ===== Ejecución del programa al correr "python3 main.py" =====
 if __name__ == "__main__":
     raise SystemExit(main())
